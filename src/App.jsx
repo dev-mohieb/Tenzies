@@ -4,10 +4,28 @@ import { nanoid } from "nanoid";
 import Header from "./components/Header";
 import Die from "./components/Die";
 import ReactConfetti from "react-confetti";
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, push, onValue } from "firebase/database";
+
+const appSettings = {
+  databaseURL:
+    "https://tenzies-caa59-default-rtdb.europe-west1.firebasedatabase.app/",
+};
+const app = initializeApp(appSettings);
+const database = getDatabase(app);
+const scoresInDB = ref(database, "scores");
+let scores = [];
+onValue(scoresInDB, function (snapshot) {
+  scores = Object.entries(snapshot.val());
+  scores.forEach((score) => {
+    console.log(score[1].name, score[1].score);
+  });
+});
 
 function App() {
   const [dice, setDice] = useState(generateNewDice());
   const [tenzies, setTenzies] = useState(false);
+  const [rolls, setRolls] = useState(0);
 
   useEffect(() => {
     const heldValue = dice[0].value;
@@ -16,7 +34,10 @@ function App() {
       dice.every((die) => die.value === heldValue)
     ) {
       setTenzies(true);
-      console.log("you won");
+      push(scoresInDB, {
+        name: "name",
+        score: rolls,
+      });
     }
   }, [dice]);
 
@@ -45,13 +66,14 @@ function App() {
     if (tenzies) {
       setDice(generateNewDice());
       setTenzies(false);
+      setRolls(0);
     } else {
       setDice((prevDice) =>
         prevDice.map((die) => (die.isHeld ? die : generateNewDie()))
       );
+      setRolls((prevRolls) => prevRolls + 1);
     }
   }
-
   const diceEl = dice.map((die) => (
     <Die
       key={die.id}
@@ -62,7 +84,7 @@ function App() {
   ));
 
   return (
-    <main className="flex flex-col items-center rounded-xl min-w-[378px] bg-[#F5F5F5] p-8">
+    <main className="flex min-w-[378px] flex-col items-center rounded-xl bg-[#F5F5F5] p-8">
       {tenzies && <ReactConfetti />}
       <Header />
       <section className="mb-9 grid grid-cols-5 gap-4">{diceEl}</section>
