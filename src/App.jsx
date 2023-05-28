@@ -1,19 +1,15 @@
 import { useState, useEffect } from "react";
+import useSound from "use-sound";
 import "./App.css";
 import { nanoid } from "nanoid";
 import Header from "./components/Header";
 import Die from "./components/Die";
 import ReactConfetti from "react-confetti";
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, push, onValue } from "firebase/database";
+import { push, onValue } from "firebase/database";
+import { scoresInDB } from "./firebase";
+import diceSfx from "./assets/dice.mp3";
+import cheerSfx from "./assets/cheer.mp3";
 
-const appSettings = {
-  databaseURL:
-    "https://tenzies-caa59-default-rtdb.europe-west1.firebasedatabase.app/",
-};
-const app = initializeApp(appSettings);
-const database = getDatabase(app);
-const scoresInDB = ref(database, "scores");
 let scores = [];
 onValue(scoresInDB, function (snapshot) {
   scores = Object.entries(snapshot.val());
@@ -26,6 +22,8 @@ function App() {
   const [dice, setDice] = useState(generateNewDice());
   const [tenzies, setTenzies] = useState(false);
   const [rolls, setRolls] = useState(0);
+  const [roll] = useSound(diceSfx);
+  const [cheer] = useSound(cheerSfx)
 
   useEffect(() => {
     const heldValue = dice[0].value;
@@ -33,6 +31,7 @@ function App() {
       dice.every((die) => die.isHeld === true) &&
       dice.every((die) => die.value === heldValue)
     ) {
+      cheer()
       setTenzies(true);
       push(scoresInDB, {
         name: "name",
@@ -73,6 +72,7 @@ function App() {
       );
       setRolls((prevRolls) => prevRolls + 1);
     }
+    roll();
   }
   const diceEl = dice.map((die) => (
     <Die

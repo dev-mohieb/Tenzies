@@ -1,7 +1,14 @@
+import popSfx from "../assets/pop.mp3"
+import useSound from "use-sound";
+
 export default function Die(props) {
+  const [play] = useSound(popSfx)
   return (
     <section
-      onClick={props.holdDie}
+      onClick={() => {
+        props.holdDie()
+        play()
+      }}
       className={`grid h-[50px] w-[50px] place-items-center rounded-md transition-colors md:h-[60px] md:w-[60px] md:cursor-pointer ${
         props.isHeld ? "bg-green-400" : "bg-white"
       } text-[20px] shadow-md md:text-[24px]`}>
