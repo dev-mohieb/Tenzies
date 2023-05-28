@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
-
+import "./App.css"
 import Header from "./components/Header";
 import Die from "./components/Die";
 

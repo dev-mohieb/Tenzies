@@ -1,0 +1,69 @@
+.circle {
+    width: 11px;
+    height: 11px;
+    background: black;
+    border-radius: 9999px;
+}
+
+.one .circle{
+    grid-area: 2 / 2 / 3 / 3;
+}
+
+.two .circle:nth-of-type(1) {
+    grid-column: 3/4;
+}
+.two .circle:nth-of-type(2) {
+    grid-area: 3 / 1 / 4 / 2;
+}
+
+.three .circle:nth-of-type(1) {
+    grid-area: 3 / 1 / 4 / 2;
+}
+.three .circle:nth-of-type(2) {
+    grid-area: 2 / 2 / 3 / 3;
+}
+.three .circle:nth-of-type(3) {
+    grid-area: 1 / 3 / 2 / 4;
+}
+
+.four .circle:nth-of-type(2) {
+    grid-area: 1 / 3 / 2 / 4;
+}
+.four .circle:nth-of-type(3) {
+    grid-area: 3 / 1 / 4 / 2;
+}
+.four .circle:nth-of-type(4) {
+    grid-area: 3 / 3 / 4 / 4;
+}
+
+.five .circle:nth-of-type(2) {
+    grid-area: 1 / 3 / 2 / 4;
+}
+.five .circle:nth-of-type(3) {
+    grid-area: 2 / 2 / 3 / 3;
+}
+.five .circle:nth-of-type(4) {
+    grid-area: 3 / 1 / 4 / 2;
+}
+.five .circle:nth-of-type(5) {
+    grid-area: 3 / 3 / 4 / 4;
+}
+
+
+.six .circle:nth-of-type(2) {
+    grid-area: 2 / 1 / 3 / 2;
+}
+.six .circle:nth-of-type(3) {
+    grid-area: 3 / 1 / 4 / 2;
+}
+.six .circle:nth-of-type(4) {
+    grid-area: 1 / 3 / 2 / 4;
+}
+.six .circle:nth-of-type(5) {
+    grid-area: 2 / 3 / 3 / 4;
+}
+.six .circle:nth-of-type(6) {
+    grid-area: 3 / 3 / 4 / 4;
+}
+
+
