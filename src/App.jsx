@@ -1,29 +1,31 @@
 import { useState, useEffect } from "react";
-import useSound from "use-sound";
-import "./App.css";
 import { nanoid } from "nanoid";
+
 import Header from "./components/Header";
 import Die from "./components/Die";
+
 import ReactConfetti from "react-confetti";
-import { push, onValue } from "firebase/database";
-import { scoresInDB } from "./firebase";
+
+import useSound from "use-sound";
 import diceSfx from "./assets/dice.mp3";
 import cheerSfx from "./assets/cheer.mp3";
+// import { push, onValue } from "firebase/database";
+// import { scoresInDB } from "./firebase";
 
-let scores = [];
-onValue(scoresInDB, function (snapshot) {
-  scores = Object.entries(snapshot.val());
-  scores.forEach((score) => {
-    console.log(score[1].name, score[1].score);
-  });
-});
+// let scores = [];
+// onValue(scoresInDB, function (snapshot) {
+//   scores = Object.entries(snapshot.val());
+//   scores.forEach((score) => {
+//     console.log(score[1].name, score[1].score);
+//   });
+// });
 
 function App() {
   const [dice, setDice] = useState(generateNewDice());
   const [tenzies, setTenzies] = useState(false);
-  const [rolls, setRolls] = useState(0);
   const [roll] = useSound(diceSfx);
-  const [cheer] = useSound(cheerSfx)
+  const [cheer, { stop }] = useSound(cheerSfx);
+  // const [rolls, setRolls] = useState(0);
 
   useEffect(() => {
     const heldValue = dice[0].value;
@@ -31,12 +33,12 @@ function App() {
       dice.every((die) => die.isHeld === true) &&
       dice.every((die) => die.value === heldValue)
     ) {
-      cheer()
+      cheer();
       setTenzies(true);
-      push(scoresInDB, {
-        name: "name",
-        score: rolls,
-      });
+      // push(scoresInDB, {
+      //   name: "name",
+      //   score: rolls,
+      // });
     }
   }, [dice]);
 
@@ -48,9 +50,7 @@ function App() {
     };
   }
   function generateNewDice() {
-    return new Array(10).fill(0).map(() => {
-      return generateNewDie();
-    });
+    return new Array(10).fill(0).map(() => generateNewDie());
   }
 
   function holdDie(id) {
@@ -63,6 +63,7 @@ function App() {
 
   function rollDice() {
     if (tenzies) {
+      stop();
       setDice(generateNewDice());
       setTenzies(false);
       setRolls(0);
@@ -74,6 +75,7 @@ function App() {
     }
     roll();
   }
+
   const diceEl = dice.map((die) => (
     <Die
       key={die.id}
@@ -84,13 +86,13 @@ function App() {
   ));
 
   return (
-    <main className="flex min-w-[378px] flex-col items-center rounded-xl bg-[#F5F5F5] p-8">
+    <main className="relative flex min-w-[378px] flex-col items-center overflow-hidden rounded-xl bg-[#F5F5F5] p-8">
       {tenzies && <ReactConfetti />}
       <Header />
       <section className="mb-9 grid grid-cols-5 gap-4">{diceEl}</section>
       <button
         onClick={rollDice}
-        className="h-[45px] w-[120px] cursor-default rounded-md bg-[#5035FF] font-Karla text-white transition-shadow active:shadow-inner active:shadow-gray-900/75 md:cursor-pointer md:text-xl">
+        className="h-[45px] w-[120px] cursor-default rounded-md bg-[#5035FF] font-Karla text-white transition-shadow active:shadow-inner   active:shadow-gray-900/75 md:cursor-pointer md:text-xl">
         {tenzies ? "New Game" : "Roll"}
       </button>
     </main>
