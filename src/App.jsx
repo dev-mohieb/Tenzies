@@ -9,23 +9,12 @@ import ReactConfetti from "react-confetti";
 import useSound from "use-sound";
 import diceSfx from "./assets/dice.mp3";
 import cheerSfx from "./assets/cheer.mp3";
-// import { push, onValue } from "firebase/database";
-// import { scoresInDB } from "./firebase";
-
-// let scores = [];
-// onValue(scoresInDB, function (snapshot) {
-//   scores = Object.entries(snapshot.val());
-//   scores.forEach((score) => {
-//     console.log(score[1].name, score[1].score);
-//   });
-// });
 
 function App() {
   const [dice, setDice] = useState(generateNewDice());
   const [tenzies, setTenzies] = useState(false);
   const [roll] = useSound(diceSfx);
   const [cheer, { stop }] = useSound(cheerSfx);
-  // const [rolls, setRolls] = useState(0);
 
   useEffect(() => {
     const heldValue = dice[0].value;
@@ -35,10 +24,6 @@ function App() {
     ) {
       cheer();
       setTenzies(true);
-      // push(scoresInDB, {
-      //   name: "name",
-      //   score: rolls,
-      // });
     }
   }, [dice]);
 
@@ -66,12 +51,10 @@ function App() {
       stop();
       setDice(generateNewDice());
       setTenzies(false);
-      setRolls(0);
     } else {
       setDice((prevDice) =>
         prevDice.map((die) => (die.isHeld ? die : generateNewDie()))
       );
-      setRolls((prevRolls) => prevRolls + 1);
     }
     roll();
   }
