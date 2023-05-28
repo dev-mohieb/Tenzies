@@ -90,7 +90,7 @@ function App() {
       <section className="mb-9 grid grid-cols-5 gap-4">{diceEl}</section>
       <button
         onClick={rollDice}
-        className="h-[35px] w-[100px] cursor-default rounded-md bg-[#5035FF] font-Karla text-white transition-shadow active:shadow-inner active:shadow-gray-900/75 md:h-[45px] md:w-[120px] md:cursor-pointer md:text-xl">
+        className="h-[45px] w-[120px] cursor-default rounded-md bg-[#5035FF] font-Karla text-white transition-shadow active:shadow-inner active:shadow-gray-900/75 md:cursor-pointer md:text-xl">
         {tenzies ? "New Game" : "Roll"}
       </button>
     </main>
