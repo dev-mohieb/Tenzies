@@ -79,7 +79,7 @@ function App() {
     />
   ));
   return (
-    <main className="relative flex h-[445px] w-[400px] flex-col items-center overflow-hidden rounded-xl bg-[#F5F5F5] p-8">
+    <main className="relative flex h-[425px] w-[90%] min-w-[335px] max-w-[400px] flex-col items-center justify-center overflow-hidden rounded-xl bg-[#F5F5F5] px-2 py-8 sm:w-[400px] sm:px-8">
       {tenzies ? (
         <>
           <ReactConfetti />

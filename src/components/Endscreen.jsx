@@ -1,16 +1,14 @@
-function Highscore(props) {
+function NewScore(props) {
   return (
-    <section className="col-span-3 self-start border-b-2 border-b-gray-300 text-center">
-      <p className="text-2xl">New Highscore!</p>
+    <section className="border-b-2 border-b-gray-300 text-center">
       <h2 className="my-2 text-8xl">{props.score}</h2>
     </section>
   );
 }
 
-function Score(props) {
+function PrevScore(props) {
   return (
-    <section className="col-span-3 text-2xl">
-      <p>Score: {props.score}</p>
+    <section className="mb-4 mt-auto text-2xl">
       <p>Best Score: {props.bestScore}</p>
     </section>
   );
@@ -18,10 +16,12 @@ function Score(props) {
 
 export default function Endscreen(props) {
   return (
-    <section className="grid h-full w-full grid-cols-3 place-items-center overflow-hidden text-center">
-      {props.isHighScore && <Highscore score={props.bestScore} />}
-      <p className="col-span-3 text-5xl">You Won!</p>
-      <Score score={props.currentScore} bestScore={props.bestScore} />
+    <section className="flex h-full w-full flex-col items-center overflow-hidden text-center">
+      <NewScore score={props.currentScore} />
+      <p className="col-span-3 mt-4 text-5xl">
+        {props.isHighScore ? "Highscore!" : "You Won!"}
+      </p>
+      <PrevScore score={props.currentScore} bestScore={props.bestScore} />
     </section>
   );
 }
