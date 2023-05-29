@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
-import "./App.css"
+import "./App.css";
 import Header from "./components/Header";
 import Die from "./components/Die";
+import Endscreen from "./components/Endscreen";
 
 import ReactConfetti from "react-confetti";
 
@@ -12,7 +13,9 @@ import cheerSfx from "./assets/cheer.mp3";
 
 function App() {
   const [dice, setDice] = useState(generateNewDice());
+  const [rolls, setRolls] = useState(0);
   const [tenzies, setTenzies] = useState(false);
+  const [isHighScore, setIsHighScore] = useState(false);
   const [roll] = useSound(diceSfx);
   const [cheer, { stop }] = useSound(cheerSfx);
 
@@ -24,6 +27,11 @@ function App() {
     ) {
       cheer();
       setTenzies(true);
+      const scoreInLS = JSON.parse(localStorage.getItem("score"));
+      if (!scoreInLS || rolls < scoreInLS) {
+        setIsHighScore(true);
+        localStorage.setItem("score", rolls);
+      }
     }
   }, [dice]);
 
@@ -51,7 +59,10 @@ function App() {
       stop();
       setDice(generateNewDice());
       setTenzies(false);
+      setRolls(0);
+      setIsHighScore(false);
     } else {
+      setRolls((prevRolls) => prevRolls + 1);
       setDice((prevDice) =>
         prevDice.map((die) => (die.isHeld ? die : generateNewDie()))
       );
@@ -67,15 +78,28 @@ function App() {
       holdDie={() => holdDie(die.id)}
     />
   ));
-
   return (
-    <main className="relative flex min-w-[378px] flex-col items-center overflow-hidden rounded-xl bg-[#F5F5F5] p-8">
-      {tenzies && <ReactConfetti />}
-      <Header />
-      <section className="mb-9 grid grid-cols-5 gap-4">{diceEl}</section>
+    <main className="relative flex h-[445px] w-[400px] flex-col items-center overflow-hidden rounded-xl bg-[#F5F5F5] p-8">
+      {tenzies ? (
+        <>
+          <ReactConfetti />
+          <Endscreen
+            currentScore={rolls}
+            bestScore={JSON.parse(localStorage.getItem("score"))}
+            isHighScore={isHighScore}
+          />
+        </>
+      ) : (
+        <>
+          <Header />
+          <section className="mb-9 grid h-full grid-cols-5 gap-4">
+            {diceEl}
+          </section>
+        </>
+      )}
       <button
         onClick={rollDice}
-        className="h-[45px] w-[120px] cursor-default rounded-md bg-[#5035FF] font-Karla text-white transition-shadow active:shadow-inner   active:shadow-gray-900/75 md:cursor-pointer md:text-xl">
+        className="min-h-[45px] w-[120px] cursor-default rounded-md bg-[#5035FF] font-Karla text-white transition-shadow active:shadow-inner   active:shadow-gray-900/75 md:cursor-pointer md:text-xl">
         {tenzies ? "New Game" : "Roll"}
       </button>
     </main>

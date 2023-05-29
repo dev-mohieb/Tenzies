@@ -5,7 +5,7 @@ export default function Die(props) {
   const [play] = useSound(popSfx);
   const dots = new Array(props.value)
     .fill("")
-    .map((dot) => <div className="circle"></div>);
+    .map((dot, i) => <div key={i} className="circle"></div>);
   let cls = "";
   if (props.value === 1) {
     cls = "one";
